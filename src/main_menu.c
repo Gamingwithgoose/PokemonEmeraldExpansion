@@ -1076,7 +1076,7 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
         {
         case ACTION_NEW_GAME:
         default:
-            if (isFrlgInt)
+            if (IS_FRLG)
             {
                 DestroyTask(taskId);
                 FreeAllWindowBuffers();
@@ -1085,14 +1085,12 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
                 else
                     sCurrItemAndOptionMenuCheck |= OPTION_MENU_FLAG;  // entering the options menu
                 StartNewGameSceneFrlg();
-                gSaveBlock2Ptr->playerRegion = REGION_KANTO;
                 return;
             }
 
             gPlttBufferUnfaded[0] = RGB_BLACK;
             gPlttBufferFaded[0] = RGB_BLACK;
             gTasks[taskId].func = Task_NewGameBirchSpeech_Init;
-            gSaveBlock2Ptr->playerRegion = REGION_HOENN;
             break;
         case ACTION_CONTINUE:
             gPlttBufferUnfaded[0] = RGB_BLACK;
@@ -2141,7 +2139,6 @@ static s8 NewGameBirchSpeech_ProcessGenderMenuInput(void)
 void NewGameBirchSpeech_SetDefaultPlayerName(u8 nameId)
 {
     const u8 *name;
-    const u8 *rivalName;
     u8 i;
 
     if (gSaveBlock2Ptr->playerGender == MALE)
@@ -2151,12 +2148,6 @@ void NewGameBirchSpeech_SetDefaultPlayerName(u8 nameId)
     for (i = 0; i < PLAYER_NAME_LENGTH; i++)
         gSaveBlock2Ptr->playerName[i] = name[i];
     gSaveBlock2Ptr->playerName[PLAYER_NAME_LENGTH] = EOS;
-
-    rivalName = COMPOUND_STRING("GREEN");
-    for (i = 0; i < PLAYER_NAME_LENGTH && rivalName[i] != EOS; i++)
-        gSaveBlock2Ptr->rivalName[i] = rivalName[i];
-    for (; i < PLAYER_NAME_LENGTH + 1; i++)
-        gSaveBlock2Ptr->rivalName[i] = EOS;
 }
 
 static void CreateMainMenuErrorWindow(const u8 *str)
@@ -2218,39 +2209,15 @@ static void MainMenu_FormatSavegamePokedex(void)
 
 static void MainMenu_FormatSavegameBadges(void)
 {
-    static const u16 sContinueBadgeFlags[16] =
-    {
-        // Hoenn
-        FLAG_DEFEATED_RUSTBORO_GYM,
-        FLAG_DEFEATED_DEWFORD_GYM,
-        FLAG_DEFEATED_MAUVILLE_GYM,
-        FLAG_DEFEATED_LAVARIDGE_GYM,
-        FLAG_DEFEATED_PETALBURG_GYM,
-        FLAG_DEFEATED_FORTREE_GYM,
-        FLAG_DEFEATED_MOSSDEEP_GYM,
-        FLAG_DEFEATED_SOOTOPOLIS_GYM,
-
-        // Kanto
-        FLAG_BADGE01_GET,
-        FLAG_BADGE02_GET,
-        FLAG_BADGE03_GET,
-        FLAG_BADGE04_GET,
-        FLAG_BADGE05_GET,
-        FLAG_BADGE06_GET,
-        FLAG_BADGE07_GET,
-        FLAG_BADGE08_GET,
-    };
-
     u8 str[0x20];
     u8 badgeCount = 0;
     u32 i;
 
-    for (i = 0; i < 16; i++)
+    for (i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
     {
-        if (FlagGet(sContinueBadgeFlags[i]))
+        if (FlagGet(i))
             badgeCount++;
     }
-
     StringExpandPlaceholders(gStringVar4, gText_ContinueMenuBadges);
     AddTextPrinterParameterized3(2, FONT_NORMAL, 0x6C, 33, sTextColor_MenuInfo, TEXT_SKIP_DRAW, gStringVar4);
     ConvertIntToDecimalStringN(str, badgeCount, STR_CONV_MODE_LEADING_ZEROS, 1);

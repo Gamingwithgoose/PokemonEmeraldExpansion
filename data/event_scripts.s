@@ -595,7 +595,7 @@ gStdScripts_End::
 	.include "data/maps/Route119_House/scripts.inc"
 	.include "data/maps/Route124_DivingTreasureHuntersHouse/scripts.inc"
 
-.if IS_FRLG
+
 
 @ FRLG scripts
 	.include "data/maps/BattleColosseum_2P_Frlg/scripts.inc"
@@ -1042,7 +1042,7 @@ gStdScripts_End::
 	.include "data/scripts/flavor_text.inc"
 	.include "data/scripts/pkmn_center_nurse_frlg.inc"
 
-.endif
+
 
 	.include "data/scripts/std_msgbox.inc"
 	.include "data/scripts/trainer_battle.inc"
@@ -1768,3 +1768,13 @@ EventScript_FlightCall_Cancel::
     end
 	
 multichoice 0, 0, MULTI_FLIGHTCALL_REGIONS, FALSE
+
+Common_EventScript_UnionRoomAttendant_Frlg::
+    goto Common_EventScript_UnionRoomAttendant
+
+Common_EventScript_WirelessClubAttendant_Frlg::
+    goto Common_EventScript_WirelessClubAttendant
+
+Common_EventScript_DirectCornerAttendant_Frlg::
+    goto Common_EventScript_DirectCornerAttendant
+	

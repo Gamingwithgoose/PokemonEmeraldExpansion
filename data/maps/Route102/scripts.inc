@@ -116,13 +116,14 @@ Route102_EventScript_ProfOak::
 
 	msgbox Route102_Text_Kanto, MSGBOX_DEFAULT
 	giveitem ITEM_FLIGHT_CALL, 1
+	setflag FLAG_WORLD_MAP_PALLET_TOWN
 	setflag FLAG_GOT_SS_TICKET_FROM_OAK
 	msgbox Route102_Text_ReceivedTicket, MSGBOX_DEFAULT
 	msgbox Route102_Text_KantoAfterGift, MSGBOX_DEFAULT
 	closemessage
 	applymovement ProfOak, Route102_Movement_ProfOakWarpOut
 	waitmovement 0
-	setflag FLAG_HIDE_ROUTE102_PROF_OAK
+		setflag FLAG_HIDE_ROUTE102_PROF_OAK
 	hideobjectat ProfOak, MAP_ROUTE102
 	releaseall
 	end

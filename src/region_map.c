@@ -30,6 +30,7 @@
 #include "constants/weather.h"
 #include "item_menu.h"
 extern bool8 gFlightCallFromBag;
+extern bool8 gSkipShowMonAnim;
 
 /*
  *  This file handles region maps generally, and the map used when selecting a fly destination.
@@ -2593,6 +2594,9 @@ static void CB_ExitFlyMap(void)
             {
                 struct RegionMap *tempRegionMap = &sFlyMap->regionMap;
 
+				if (gFlightCallFromBag)
+					gSkipShowMonAnim = TRUE;
+
                 gFlightCallFromBag = FALSE;
                 SetFlyDestination(tempRegionMap);
                 ReturnToFieldFromFlyMapSelect();
@@ -2638,7 +2642,7 @@ u32 FilterFlyDestination(struct RegionMap* regionMap)
     }
 }
 
-void SetFlyDestination(struct RegionMap* regionMap)
+void SetFlyDestination(struct RegionMap *regionMap)
 {
     u32 flyDestination = FilterFlyDestination(regionMap);
 

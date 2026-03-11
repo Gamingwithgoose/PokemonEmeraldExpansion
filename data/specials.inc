@@ -640,3 +640,6 @@ gSpecials::
 	def_special CheckAddCoins
 	def_special Special_FlightCallKanto
 	def_special Special_FlightCallHoenn
+	def_special GetStarterPokemonVoid
+	def_special GetStarterPokemonVoid_Frlg
+	def_special CB2_StartCreditsSequenceFrlg

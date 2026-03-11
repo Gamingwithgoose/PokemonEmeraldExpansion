@@ -25,6 +25,9 @@
 #include "constants/songs.h"
 #include "constants/sound.h"
 
+extern bool8 isFrlgInt;
+void CB2_GoToCopyrightScreenForce_Emerald(void);
+
 /*
     The intro is grouped into the following scenes
     - Copyright screen
@@ -1091,7 +1094,13 @@ static void Task_CallIntroCallback(u8 taskId)
     struct IntroSequenceData * ptr = (void *)GetWordTaskArg(taskId, 0);
 
     // End intro early if player presses A/Start/Select
-    if (JOY_NEW(A_BUTTON | START_BUTTON | SELECT_BUTTON) && ptr->callback != IntroCB_ExitToTitleScreen)
+	if (JOY_NEW(SELECT_BUTTON))
+{
+    SetMainCallback2(CB2_GoToCopyrightScreenForce_Emerald);
+    return;
+}
+	
+    if (JOY_NEW(A_BUTTON | START_BUTTON) && ptr->callback != IntroCB_ExitToTitleScreen)
         SetIntroCB(ptr, IntroCB_ExitToTitleScreen);
 
     ptr->callback(ptr);

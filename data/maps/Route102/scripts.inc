@@ -115,43 +115,42 @@ Route102_EventScript_ProfOak::
 	goto_if TRUE, Route102_EventScript_ProfOak_Done
 
 	msgbox Route102_Text_Kanto, MSGBOX_DEFAULT
-	giveitem ITEM_SS_TICKET, 1
+	giveitem ITEM_FLIGHT_CALL, 1
 	setflag FLAG_GOT_SS_TICKET_FROM_OAK
 	msgbox Route102_Text_ReceivedTicket, MSGBOX_DEFAULT
 	msgbox Route102_Text_KantoAfterGift, MSGBOX_DEFAULT
 	closemessage
-	playse SE_WARP_OUT
 	applymovement ProfOak, Route102_Movement_ProfOakWarpOut
 	waitmovement 0
-	removeobject ProfOak
 	setflag FLAG_HIDE_ROUTE102_PROF_OAK
-	release
+	hideobjectat ProfOak, MAP_ROUTE102
+	releaseall
 	end
 
 Route102_EventScript_ProfOak_Done::
-	release
+	releaseall
 	end
 
 Route102_Text_Kanto:
-	.string "Prof Oak: {PLAYER}…\n"
-	.string "Prof Birch said you'd be,\l"
-	.string "coming through.\p"
-	.string "You should come visit me\n"
-	.string "in Kanto.\p"
-	.string "You can use this to get\n"
-	.string "to Kanto.$"
+	.string "{PLAYER}!!!\n"
+	.string "Prof Birch said you'd be coming\l"
+	.string "through here.\p"
+	.string "Prof Oak in Kanto wanted\n"
+	.string "me to find you.\p"
+	.string "He wants you to have this.$"
 
 Route102_Text_ReceivedTicket:
-	.string "{PLAYER} received the\n"
-	.string "S.S. TICKET!$"
+	.string "{PLAYER} received the new\n"
+	.string "Flight Call device!$"
 
 Route102_Text_KantoAfterGift:
-	.string "Prof Oak: That device should\n"
-	.string "get you to Kanto safely.\p"
-	.string "I should get back to Kanto\n"
-	.string "myself. See you soon!$"
+	.string "That device should enable you\n"
+	.string "to visit Kanto.\p"
+	.string "I should get back to the lab\n"
+	.string "myself. See you later!$"
 
 Route102_Movement_ProfOakWarpOut:
+	walk_left
 	walk_left
 	walk_left
 	walk_left

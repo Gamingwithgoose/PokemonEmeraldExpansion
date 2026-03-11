@@ -98,6 +98,9 @@ enum DeptStoreFloorNumber
 #define FANCOUNTER_FINISHED_CONTEST  2
 #define FANCOUNTER_USED_BATTLE_TOWER 3
 
+//Flight Call function
+
+
 // Return values for DoDeoxysRockInteraction
 enum DeoxysRockResult
 {

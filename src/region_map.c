@@ -80,6 +80,9 @@ static EWRAM_DATA struct {
     bool8 choseFlyLocation;
 } *sFlyMap = NULL;
 
+//Flight Call function
+static EWRAM_DATA s8 sForcedFlightRegion;
+
 static bool32 sDrawFlyDestTextWindow;
 
 static u8 ProcessRegionMapInput_Full(void);
@@ -695,6 +698,17 @@ static const struct SpriteTemplate sFlyDestIconSpriteTemplate =
     .anims = sFlyDestIcon_Anims,
 };
 
+//Flight Call function
+void SetForcedFlightRegion(s8 region)
+{
+    sForcedFlightRegion = region;
+}
+
+void ClearForcedFlightRegion(void)
+{
+    sForcedFlightRegion = -1;
+}
+
 void InitRegionMap(struct RegionMap *regionMap, bool8 zoomed)
 {
     InitRegionMapData(regionMap, NULL, zoomed);
@@ -736,30 +750,39 @@ bool8 LoadRegionMapGfx(void)
     enum RegionMapType regionMapType;
     switch (sRegionMap->initStep)
     {
-    case 0:
-        regionMapType = GetRegionMapType(gMapHeader.regionMapSectionId);
-        if (sRegionMap->bgManaged)
-            DecompressAndCopyTileDataToVram(sRegionMap->bgNum, gRegionMapInfos[regionMapType].regionMapGfx, 0, 0, 0);
-        else
-            DecompressDataWithHeaderVram(gRegionMapInfos[regionMapType].regionMapGfx, (u16 *)BG_CHAR_ADDR(2));
-        break;
-    case 1:
-        regionMapType = GetRegionMapType(gMapHeader.regionMapSectionId);
-        if (sRegionMap->bgManaged)
-        {
-            if (!FreeTempTileDataBuffersIfPossible())
-                DecompressAndCopyTileDataToVram(sRegionMap->bgNum, gRegionMapInfos[regionMapType].regionMapTilemap, 0, 0, 1);
-        }
-        else
-        {
-            DecompressDataWithHeaderVram(gRegionMapInfos[regionMapType].regionMapTilemap, (u16 *)BG_SCREEN_ADDR(28));
-        }
-        break;
-    case 2:
-        regionMapType = GetRegionMapType(gMapHeader.regionMapSectionId);
-        if (!FreeTempTileDataBuffersIfPossible())
-            LoadPalette(gRegionMapInfos[regionMapType].regionMapPalette, BG_PLTT_ID(7), 3 * PLTT_SIZE_4BPP);
-        break;
+	case 0:
+		if (sForcedFlightRegion >= 0)
+			regionMapType = sForcedFlightRegion;
+		else
+			regionMapType = GetRegionMapType(gMapHeader.regionMapSectionId);
+
+		if (sRegionMap->bgManaged)
+			DecompressAndCopyTileDataToVram(sRegionMap->bgNum, gRegionMapInfos[regionMapType].regionMapGfx, 0, 0, 0);
+		else
+			DecompressDataWithHeaderVram(gRegionMapInfos[regionMapType].regionMapGfx, (u16 *)BG_CHAR_ADDR(2));
+		break;
+	case 1:
+		if (sForcedFlightRegion >= 0)
+			regionMapType = sForcedFlightRegion;
+		else
+			regionMapType = GetRegionMapType(gMapHeader.regionMapSectionId);
+	
+		if (sRegionMap->bgManaged)
+			DecompressAndCopyTileDataToVram(sRegionMap->bgNum, gRegionMapInfos[regionMapType].regionMapGfx, 0, 0, 0);
+		else
+			DecompressDataWithHeaderVram(gRegionMapInfos[regionMapType].regionMapGfx, (u16 *)BG_CHAR_ADDR(2));
+		break;
+	case 2:
+		if (sForcedFlightRegion >= 0)
+			regionMapType = sForcedFlightRegion;
+		else
+			regionMapType = GetRegionMapType(gMapHeader.regionMapSectionId);
+
+		if (sRegionMap->bgManaged)
+			DecompressAndCopyTileDataToVram(sRegionMap->bgNum, gRegionMapInfos[regionMapType].regionMapGfx, 0, 0, 0);
+		else
+			DecompressDataWithHeaderVram(gRegionMapInfos[regionMapType].regionMapGfx, (u16 *)BG_CHAR_ADDR(2));
+		break;
     case 3:
         DecompressDataWithHeaderWram(sRegionMapCursorSmallGfxLZ, sRegionMap->cursorSmallImage);
         break;
@@ -2488,6 +2511,7 @@ static void CB_ExitFlyMap(void)
             {
                 SetMainCallback2(CB2_ReturnToPartyMenuFromFlyMap);
             }
+			ClearForcedFlightRegion();
             TRY_FREE_AND_SET_NULL(sFlyMap);
             FreeAllWindowBuffers();
         }

@@ -50,7 +50,7 @@
 
 // Flight Call function
 extern const u8 EventScript_UseFlightCall[];
-
+EWRAM_DATA bool8 gFlightCallFromBag = FALSE;
 static void ItemUseOnFieldCB_FlightCall(u8 taskId);
 void ItemUseOutOfBattle_FlightCall(u8 taskId);
 
@@ -191,6 +191,7 @@ static void ItemUseOnFieldCB_FlightCall(u8 taskId)
 
 void ItemUseOutOfBattle_FlightCall(u8 taskId)
 {
+    gFlightCallFromBag = TRUE;
     sItemUseOnFieldCB = ItemUseOnFieldCB_FlightCall;
     SetUpItemUseOnFieldCallback(taskId);
 }
